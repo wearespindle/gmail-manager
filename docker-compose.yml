@@ -1,0 +1,13 @@
+db:
+  build: Dockers/db
+  ports:
+    - 5432:5432
+web:
+  build: .
+  command: python manage.py runserver 0:8000
+  volumes:
+    - .:/home/docker/gmailmanager
+  ports:
+    - 8000:8000
+  links:
+    - db
