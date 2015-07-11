@@ -1,0 +1,10 @@
+{% if object.body_html %}
+{{ body_html|safe }}
+{% else %}
+{{ object.body_text|linebreaks }}
+{% endif %}
+<br>
+{% for attachment in attachments %}
+<a href="{{ attachment.url }}">{{ attachment }}</a>
+<br>
+{% endfor %}

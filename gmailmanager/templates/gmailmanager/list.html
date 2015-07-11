@@ -1,0 +1,27 @@
+{% extends 'gmailmanager/base.html' %}
+
+{% block body %}
+{{ account }}<br>
+<p>
+    <a href="{% url 'gmail_list' account.id %}">ALL MAIL</a>
+
+{% for label in account.labels.all %}
+    <a href="{% url 'gmail_label_list' account.id label.id %}">{{ label }}</a>
+{% endfor %}
+</p>
+<p>
+    Total messages for label {{ label }}: {{ object_list.count }}
+</p>
+<p>
+    {% for message in object_list %}
+    <a href="{% url 'gmail_archive' message.id %}">(A)</a>
+    <a href="{% url 'gmail_trash' message.id %}">(T)</a>
+    <a href="{% url 'gmail_delete' message.id %}">(D)</a>
+    <a href="{% url 'gmail_html' message.id %}">
+        {% if not message.read %} <strong> {% endif %}
+        {{ message.sent_date|date}} - {{ message.sender.name }} - {{ message.subject|default:'No subject' }}
+        {% if message.read %} </strong> {% endif %}
+    </a><br>
+{% endfor %}
+</p>
+{% endblock %}

@@ -1,0 +1,53 @@
+flower:
+  build: .
+  command: flower --app=test_project.celery --broker=amqp://guest@rabbit:5672
+  volumes:
+    - .:/home/docker/gmailmanager
+  ports:
+    - 5555:5555
+  links:
+    - rabbit
+    - db
+db:
+  image: postgres
+  ports:
+    - 5432:5432
+rabbit:
+  image: rabbitmq:3.5.3-management
+  hostname: rabbit
+  ports:
+    - 5672:5672
+    - 15672:15672
+redis:
+  image: redis
+  ports:
+    - 6379:6379
+web:
+  build: .
+  command: python manage.py runserver 0:8000
+  volumes:
+    - .:/home/docker/gmailmanager
+  ports:
+    - 8000:8000
+  links:
+    - db
+    - rabbit
+    - redis
+worker1:
+  build: .
+  command: celery worker --loglevel=warning --app=test_project.celery -Q account_scheduler,history,sync_message,sync_account,edit_labels,trash_message,delete_message,send_message,first_sync_messages -P eventlet -c 10 -n worker1.%h
+  volumes:
+    - .:/home/docker/gmailmanager
+  links:
+    - db
+    - rabbit
+    - redis
+beat:
+  build: .
+  command: celery worker -B --loglevel=warning -Q celery --app=test_project.celery -n beat.%h
+  volumes:
+    - .:/home/docker/gmailmanager
+  links:
+    - db
+    - rabbit
+    - redis
