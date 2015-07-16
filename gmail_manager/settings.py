@@ -25,7 +25,8 @@ USER_SETTINGS = getattr(settings, 'GMAIL_MANAGER', None)
 DEFAULTS = {
     'CLIENT_ID': '',
     'CLIENT_SECRET': '',
-    'CALLBACK_URL': 'http://localhost:8000/gmailmanager/callback/'
+    'CALLBACK_URL': 'http://localhost:8000/gmailmanager/callback/',
+    'REDIRECT_URL': '/'
 }
 
 

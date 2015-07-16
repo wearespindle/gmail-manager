@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import ModificationDateTimeField
 from django_extensions.db.models import TimeStampedModel
-from oauth2client.django_orm import CredentialsField, Storage, FlowField
+from oauth2client.django_orm import CredentialsField, Storage
 
 from .utils import build_gmail_service
 
@@ -30,6 +30,8 @@ class DeletedMixin(TimeStampedModel):
             self.save()
 
     class Meta:
+        get_latest_by = 'modified'
+        ordering = ('-modified', '-created',)
         abstract = True
 
 
